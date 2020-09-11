@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using cmdrAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cmdrAPI.Controllers
@@ -7,10 +8,18 @@ namespace cmdrAPI.Controllers
     [ApiController]
     public class CommandsController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> GetAction()
+        private readonly CommandContext _context;
+
+        public CommandsController(CommandContext context)
         {
-            return new string[] {"this", "is", "hard", "coded!"};
+            _context = context;
+        }
+
+        //GET: api/commands
+        [HttpGet]
+        public ActionResult<IEnumerable<Command>> GetAllCommands()
+        {
+            return _context.CommandItems;
         }
     }
 }
