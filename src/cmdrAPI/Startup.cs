@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using cmdrAPI.Models;
+using Npgsql;
 
 namespace cmdrAPI
 {
@@ -20,7 +21,13 @@ namespace cmdrAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("PostgreSqlConnection")));
+            var builder = new NpgsqlConnectionStringBuilder();
+            builder.ConnectionString = Configuration.GetConnectionString("PostgreSqlConnection");
+            builder.Username = Configuration["UserId"];
+            builder.Password = Configuration["Password"];
+            builder.Database = Configuration["Database"];
+
+            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
 
             services.AddControllers();
         }
